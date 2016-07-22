@@ -18,6 +18,20 @@ var RawBuildInfo string
 // Program-settable extra version information to print.
 var Extra string
 
+// You should never need to call this.
+func Update() {
+	if RawBuildInfo == "" || BuildInfo != "" {
+		return
+	}
+
+	b, err := base64.RawStdEncoding.DecodeString(strings.TrimRight(RawBuildInfo, "="))
+	if err != nil {
+		return
+	}
+
+	BuildInfo = string(b)
+}
+
 func init() {
 	versionFlag := cflag.Bool(nil, "version", false, "Print version information")
 	versionFlag.RegisterOnChange(func(bf *cflag.BoolFlag) {
@@ -29,16 +43,7 @@ func init() {
 		os.Exit(2)
 	})
 
-	if RawBuildInfo == "" || BuildInfo != "" {
-		return
-	}
-
-	b, err := base64.RawStdEncoding.DecodeString(strings.TrimRight(RawBuildInfo, "="))
-	if err != nil {
-		return
-	}
-
-	BuildInfo = string(b)
+	Update()
 }
 
 func Full() string {
