@@ -59,3 +59,7 @@ func VersionSummary(repositoryName, shortName string) string {
 	}
 	return shortName + "/" + v
 }
+
+func GoVersionSummary() string {
+	return goVersionSummary
+}

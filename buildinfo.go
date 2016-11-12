@@ -18,6 +18,8 @@ var RawBuildInfo string
 // Program-settable extra version information to print.
 var Extra string
 
+var goVersionSummary string
+
 // You should never need to call this.
 func Update() {
 	if RawBuildInfo == "" || BuildInfo != "" {
@@ -33,6 +35,11 @@ func Update() {
 }
 
 func init() {
+	goVersionSummary = runtime.Version() + "/" + runtime.GOARCH + "/" + runtime.GOOS + "/" + runtime.Compiler
+	if Cgo {
+		goVersionSummary += "+cgo"
+	}
+
 	versionFlag := cflag.Bool(nil, "version", false, "Print version information")
 	versionFlag.RegisterOnChange(func(bf *cflag.BoolFlag) {
 		if !bf.Value() {
